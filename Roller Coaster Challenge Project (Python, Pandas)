@@ -1,0 +1,112 @@
+import codecademylib3_seaborn
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# load rankings data here:
+wood_ranking = pd.read_csv('Golden_Ticket_Award_Winners_Wood.csv')
+steel_ranking = pd.read_csv('Golden_Ticket_Award_Winners_Steel.csv')
+print(wood_ranking.head())
+
+# write function to plot rankings over time for 1 roller coaster here:
+def plot_ranking(df,rc_name,park_name):
+  fig, ax = plt.subplots()
+  rc = df[(df.Park == park_name)&(df.Name==rc_name)]
+  plt.plot(rc['Year of Rank'],rc.Rank)
+  ax.set_xticks(rc['Year of Rank'].values)
+  ax.set_yticks(rc.Rank.values)
+  ax.invert_yaxis()
+  plt.title('{} Ranking'.format(rc_name))
+  plt.xlabel('Year')
+  plt.ylabel('Rank')
+  plt.show()
+plot_ranking(wood_ranking,'El Toro','Six Flags Great Adventure')
+plt.clf()
+
+# write function to plot rankings over time for 2 roller coasters here:
+def plot_2ranking(df,rc_name1,park_name1,rc_name2,park_name2):
+  fig, ax = plt.subplots()
+  rc1 = df[(df.Park == park_name1)&(df.Name==rc_name1)]
+  plt.plot(rc1['Year of Rank'],rc1.Rank,color='red',label=rc_name1)
+  rc2 = df[(df.Park == park_name2)&(df.Name==rc_name2)]
+  plt.plot(rc2['Year of Rank'],rc2.Rank,color='purple',label=rc_name2)
+  ax.invert_yaxis()
+  plt.title('{} vs {} Ranking'.format(rc_name1, rc_name2))
+  plt.xlabel('Year')
+  plt.ylabel('Rank')
+  plt.show()
+plot_2ranking(wood_ranking,'El Toro','Six Flags Great Adventure','Boulder Dash','Lake Compounce')
+plt.clf()
+
+# write function to plot top n rankings over time here:
+def plot_ranking_n(df,n):
+  rc = df[df.Rank <= n]
+  fig, ax=plt.subplots()
+  for coaster in set(rc.Name):
+    coaster_ranking = rc[rc.Name == coaster]
+    plt.plot(coaster_ranking['Year of Rank'],coaster_ranking.Rank,label=coaster)
+  ax.set_yticks=list(range(1,6))
+  ax.invert_yaxis()
+  plt.title("Top 10 Rankings")
+  plt.xlabel('Year')
+  plt.ylabel('Ranking')
+  plt.legend(loc=4)
+  plt.show()
+  
+plot_ranking_n(wood_ranking,5)
+plt.clf()
+
+# load roller coaster data here:
+roller_coaster = pd.read_csv('roller_coasters.csv')
+print(roller_coaster.head())
+
+# write function to plot histogram of column values here:
+def plot_hist(df,column):
+  fig,ax=plt.subplots()
+  plt.hist(df[column].dropna()) #histogram: count of each group, xaxis need to be continuous numeric
+  plt.xlabel(column)
+  plt.ylabel('{} count'.format(column))
+  plt.title('Histogram of Roller Coaster {}'.format(column))
+  plt.show()
+plot_hist(roller_coaster,'speed')
+plt.clf()
+
+# write function to plot inversions by coaster at a park here:
+def plot_inversions_by_coaster(coaster_df, park_name):
+  park_coasters = coaster_df[coaster_df['park'] == park_name]
+  park_coasters = park_coasters.sort_values('num_inversions', ascending=False)
+  coaster_names = park_coasters['name']
+  number_inversions = park_coasters['num_inversions']
+  plt.bar(range(len(coaster_names)),number_inversions) #bar: xticks:list of number xticklabels: group name(distinuitive) yticks:number of each group
+  ax = plt.subplot()
+  ax.set_xticks(range(len(coaster_names))) #ax
+  ax.set_xticklabels(coaster_names,rotation=90)
+  plt.title('Number of Inversions Per Coaster at {}'.format(park_name)) #plt
+  plt.xlabel('Roller Coaster')
+  plt.ylabel('# of Inversions')
+  plt.show()
+
+plot_inversions_by_coaster(roller_coaster,'Parc Asterix')
+plt.clf()
+    
+# write function to plot pie chart of operating status here:
+def pie_status(df):
+  operating = df[df.status == 'status.operating']
+  closed = df[df.status == 'status.closed.definitely']
+  status_counts = [len(operating),len(closed)]
+  plt.pie(status_counts,autopct='%0.1f%%',labels=['Operating','Closed']) #format:xx.x%
+  plt.axis('equal') #调整视角
+  plt.show()
+
+pie_status(roller_coaster)
+plt.clf()
+  
+# write function to create scatter plot of any two numeric columns here:
+def scatter_numeric(df,column1,column2):
+  plt.scatter(df[column1],df[column2])
+  plt.title('{} versus {}'.format(column1,column2))
+  plt.xlabel(column1)
+  plt.ylabel(column2)
+  plt.show()
+
+scatter_numeric(roller_coaster,'speed','num_inversions')
+plt.clf()
