@@ -50,5 +50,5 @@ my_model.compile(loss = 'mse', metrics = ['mae'], optimizer = opt)
 
 my_model.fit(features_train_scaled, labels_train, epochs = 50, batch_size = 1, verbose = 1)
 
-res_mse, res_mae = model.evaluate(features_test_scaled, labels_test, verbose = 1)
+res_mse, res_mae = my_model.evaluate(features_test_scaled, labels_test, verbose = 1)
 print(res_mse, res_mae)
